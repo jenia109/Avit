@@ -1,12 +1,14 @@
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 
-from .forms import SubscribeForm
+from .forms import SubscribeForm, PostForm
 from .models import Post
 
 
 def index(request):
-    posts = Post.objects.all().order_by('title')[:10]
+    posts = Post.objects.all().annotate(get_favorites=Count('favorites')).order_by('get_favorites')[:10]
     context = {
         "header": "All posts",
         "posts": posts,
@@ -31,7 +33,6 @@ def post_detail(request, post_id):
     }
     return render(request, 'post/detail.html', context)
 
-
 def subscribe_view(request):
     if request.method == 'Post':
         print(request.Post)
@@ -50,8 +51,24 @@ def subscribe_view(request):
 
     return render(request, 'post/subscribe.html', context)
 
+@login_required
 def post_create(request):
-    return HttpResponse("Create post")
+    if request.method =='GET':
+        form = PostForm()
+    else:
+        form = PostForm(request.Post, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            return redirect(post.get_absolute_urls())
+
+        context = {
+            "header": "Create post",
+            'form': form
+        }
+
+    return render(request, 'post/post_create.html', context)
 
 
 def post_update(request, post_id):
@@ -62,5 +79,4 @@ def post_delete(request, post_id):
     return HttpResponse(f"Delete post id:{post_id}")
 
 def post_favorites(request, post_id):
-
-    return HttpResponse(f"Favorites post id:{post_id}")
+    return HttpResponse(f"favorites post id: {post_id}")

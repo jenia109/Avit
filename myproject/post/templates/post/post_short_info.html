@@ -8,8 +8,14 @@
   <h2>Title: {{ post.title }}</h2>
   <p>Description: {{ post.description }}</p>
   <img src="{{ post.image.url }}" alt="{{ post.title }}">
-  <form method="post" action="{% url 'post:favorites' post.id %}">
-      {% csrf_token %}
-    <button type="submit"></button>
-  </form>
+  {% if request.user.is_authenticated %}
+    <form method="post" action="{% url 'post:favorites' post.id %}">
+        {% csrf_token %}
+        {% if request.user in post.favorites.all %}
+          <button type="submit"></button>
+        {% else %}
+          <button type="submit"></button>
+        {% endif %}
+    </form>
+  {% endif %}
 </div>
