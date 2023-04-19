@@ -7,6 +7,7 @@ class CustomUser(AbstractUser):
     about = models.TextField(max_length=1000, blank=True)
     avatar = models.ImageField(upload_to="profile")
     subscriber = models.ManyToManyField('self', blank=True)
+    phone_number = models.CharField(max_length=11, blank=True,null=True)
 
     def __str__(self):
         return str(self.username)
