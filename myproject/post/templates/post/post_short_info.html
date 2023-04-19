@@ -1,0 +1,15 @@
+<div class="post">
+  {% if request.path == post.get_absolute_url %}
+    <h2>Title: {{ post.title }}</h2>
+  {% else %}
+    <h2>Title: <a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+  {% endif %}
+  <p>Author: {{ post.author }}</p>
+  <h2>Title: {{ post.title }}</h2>
+  <p>Description: {{ post.description }}</p>
+  <img src="{{ post.image.url }}" alt="{{ post.title }}">
+  <form method="post" action="{% url 'post:favorites' post.id %}">
+      {% csrf_token %}
+    <button type="submit"></button>
+  </form>
+</div>
