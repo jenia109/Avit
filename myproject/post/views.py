@@ -8,7 +8,7 @@ from .models import Post
 
 
 def index(request):
-    posts = Post.objects.all().annotate(get_favorites=Count('favorites')).order_by('get_favorites')[:10]
+    posts = Post.objects.all().annotate(count_favorites=Count('favorites')).order_by('count_favorites')[:10]
     context = {
         "header": "All posts",
         "posts": posts,
@@ -56,20 +56,19 @@ def post_create(request):
     if request.method =='GET':
         form = PostForm()
     else:
-        form = PostForm(request.Post, request.FILES)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
             post.save()
             return redirect(post.get_absolute_urls())
 
-        context = {
-            "header": "Create post",
-            'form': form
-        }
+    context = {
+        "header": "Create post",
+        'form': form
+    }
 
     return render(request, 'post/post_create.html', context)
-
 
 def post_update(request, post_id):
     return HttpResponse(f"Update post id:{post_id}")

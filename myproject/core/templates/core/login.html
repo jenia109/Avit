@@ -7,9 +7,9 @@
 
 {% block page %}
     <h1>{{ header }}</h1>
-    <form action="{% url 'post:create' %}" method="post" enctype="multipart/form-data">
+    <form action="{% url 'core:login' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="Create post">
+        <input type="submit" value="Login">
     </form>
 {% endblock page %}

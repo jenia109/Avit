@@ -1,8 +1,10 @@
-from django.urls import path, re_path
-from .views import index1, index2
+from django.urls import path
+from .views import CustomLoginView
+
+app_name = 'core'
 
 urlpatterns = [
-    path('python', index1),
-    path('html', index2)
+    path('login/', CustomLoginView.as_view(), name='login')
+
 
 ]

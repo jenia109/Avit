@@ -1,10 +1,12 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.contrib.auth.views import  LoginView
+from django.urls import reverse_lazy
 
-def index1(request):
-    return HttpResponse("python")
+from .forms import LoginForm
 
-def index2(request):
-    return HttpResponse("html")
 
+class CustomLoginView(LoginView):
+    form_class = LoginForm
+    template_name = 'core/login.html'
+    next_page = reverse_lazy('post:index')
+    extra_context = {'header': 'Login'}
 
